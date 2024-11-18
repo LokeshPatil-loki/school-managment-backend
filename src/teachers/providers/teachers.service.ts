@@ -12,12 +12,17 @@ export class TeachersService {
   ) {}
   async findAll(getTeachersDto: GetTeachersDto) {
     const where: Prisma.TeacherWhereInput = {};
-    if (getTeachersDto.classId) {
-      where.lessons = {
-        some: {
-          classId: getTeachersDto.classId,
-        },
-      };
+    for (const key in getTeachersDto) {
+      switch (key) {
+        case 'classId': {
+          where.lessons = { some: { classId: getTeachersDto.classId } };
+          break;
+        }
+        case 'search': {
+          where.name = { contains: getTeachersDto.search, mode: 'insensitive' };
+          break;
+        }
+      }
     }
     const [result, count] = await this.prisma.$transaction([
       this.prisma.teacher.findMany({
