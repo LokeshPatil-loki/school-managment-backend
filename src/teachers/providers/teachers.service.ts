@@ -8,6 +8,11 @@ export class TeachersService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll() {
-    return this.prisma.teacher.findMany();
+    return this.prisma.teacher.findMany({
+      include: {
+        subjects: true,
+        classes: true,
+      },
+    });
   }
 }
