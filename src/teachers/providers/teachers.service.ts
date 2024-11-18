@@ -11,15 +11,17 @@ export class TeachersService {
     private readonly paginationProvider: PaginationProvider,
   ) {}
   async findAll(getTeachersDto: GetTeachersDto) {
-    const result = await this.prisma.teacher.findMany({
-      include: {
-        subjects: true,
-        classes: true,
-      },
-      skip: (getTeachersDto.page - 1) * getTeachersDto.limit,
-      take: getTeachersDto.limit,
-    });
-    const count = await this.prisma.teacher.count();
+    const [result, count] = await this.prisma.$transaction([
+      this.prisma.teacher.findMany({
+        include: {
+          subjects: true,
+          classes: true,
+        },
+        skip: (getTeachersDto.page - 1) * getTeachersDto.limit,
+        take: getTeachersDto.limit,
+      }),
+      this.prisma.teacher.count(),
+    ]);
     return this.paginationProvider.paginateOutput<Teacher>(
       result,
       count,
