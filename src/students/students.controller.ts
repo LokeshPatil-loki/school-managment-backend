@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { StudentsService } from './providers/students.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
+import { GetStudentsDto } from './dto/get-students.dto';
 
 @Controller('students')
 export class StudentsController {
@@ -21,8 +23,8 @@ export class StudentsController {
   }
 
   @Get()
-  findAll() {
-    return this.studentsService.findAll();
+  findAll(@Query() getStudentsDto: GetStudentsDto) {
+    return this.studentsService.findAll(getStudentsDto);
   }
 
   @Get(':id')
