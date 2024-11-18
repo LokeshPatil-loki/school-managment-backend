@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from 'nestjs-prisma';
 import { TeachersModule } from './teachers/teachers.module';
+import { PaginationModule } from './common/pagination/pagination.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { TeachersModule } from './teachers/teachers.module';
       },
     }),
     TeachersModule,
+    PaginationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
