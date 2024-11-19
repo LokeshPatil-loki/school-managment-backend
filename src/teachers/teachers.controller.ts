@@ -7,7 +7,7 @@ export class TeachersController {
   constructor(private readonly teachersService: TeachersService) {}
 
   @Get()
-  findAll(@Query() teachersQuery: GetTeachersDto) {
-    return this.teachersService.findAll(teachersQuery);
+  findAll(@Query() query: GetTeachersDto) {
+    return this.teachersService.findTeachers(query);
   }
 }
