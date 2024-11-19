@@ -6,6 +6,7 @@ import { TeachersModule } from './teachers/teachers.module';
 import { PaginationModule } from './common/pagination/pagination.module';
 import { StudentsModule } from './students/students.module';
 import { ParentsModule } from './parents/parents.module';
+import { SubjectsModule } from './subjects/subjects.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ParentsModule } from './parents/parents.module';
     PaginationModule,
     StudentsModule,
     ParentsModule,
+    SubjectsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
