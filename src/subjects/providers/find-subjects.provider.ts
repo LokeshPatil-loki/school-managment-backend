@@ -5,7 +5,7 @@ import { Subject, Prisma } from '@prisma/client';
 import { GetSubjectsDto } from '../dtos/get-subjects.dto';
 
 @Injectable()
-export class FindSubjects {
+export class FindSubjectsProvider {
   constructor(
     private readonly prisma: PrismaService,
     private readonly paginationProvider: PaginationProvider,
