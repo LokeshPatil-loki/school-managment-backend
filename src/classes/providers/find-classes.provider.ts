@@ -19,17 +19,17 @@ export class FindClassesProvider {
           break;
         }
         case 'supervisor': {
-          where.supervisor.name = {
-            contains: query.supervisor,
-            mode: 'insensitive',
+          where.supervisor = {
+            name: { contains: query.supervisor, mode: 'insensitive' },
           };
+          break;
         }
       }
     }
     const [results, count] = await this.prisma.$transaction([
       this.prisma.class.findMany({
-        where,
         include: { supervisor: true, grade: true },
+        where,
         skip: (query.page - 1) * query.limit,
         take: query.limit,
       }),
