@@ -8,5 +8,5 @@ export class GetClassesDto extends PaginationQueryDto {
 
   @IsOptional()
   @IsString()
-  supervisorId: string;
+  supervisor: string;
 }

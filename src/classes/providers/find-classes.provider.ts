@@ -18,9 +18,9 @@ export class FindClassesProvider {
           where.name = { contains: query.search, mode: 'insensitive' };
           break;
         }
-        case 'supervisorId': {
-          where.supervisorId = {
-            equals: query.supervisorId,
+        case 'supervisor': {
+          where.supervisor.name = {
+            contains: query.supervisor,
             mode: 'insensitive',
           };
         }
