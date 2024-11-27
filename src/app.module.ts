@@ -10,6 +10,7 @@ import { SubjectsModule } from './subjects/subjects.module';
 import { ClassesModule } from './classes/classes.module';
 import { LessonsModule } from './lessons/lessons.module';
 import { ExamModule } from './exam/exam.module';
+import { AssignmentsModule } from './assignments/assignments.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ExamModule } from './exam/exam.module';
     ClassesModule,
     LessonsModule,
     ExamModule,
+    AssignmentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
