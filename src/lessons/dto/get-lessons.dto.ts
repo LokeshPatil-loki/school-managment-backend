@@ -1,4 +1,5 @@
-import { IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { PaginationQueryDto } from 'src/common/pagination/dto/pagination-query.dto';
 
 export class GetLessonsDto extends PaginationQueryDto {
@@ -9,4 +10,9 @@ export class GetLessonsDto extends PaginationQueryDto {
   @IsOptional()
   @IsString()
   teacherId?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  classId?: number;
 }

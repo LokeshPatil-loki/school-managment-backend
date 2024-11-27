@@ -21,8 +21,24 @@ export class FindLessonsProvider {
           break;
         }
         case 'search': {
-          where.name = { contains: query.search, mode: 'insensitive' };
+          where.OR = [
+            {
+              subject: {
+                name: { contains: query.search, mode: 'insensitive' },
+              },
+            },
+            {
+              teacher: {
+                name: { contains: query.search, mode: 'insensitive' },
+              },
+            },
+          ];
           break;
+        }
+        case 'classId': {
+          where.classId = {
+            equals: query.classId,
+          };
         }
       }
     }
