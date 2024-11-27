@@ -29,7 +29,7 @@ export class FindLessonsProvider {
     const [results, count] = await this.prisma.$transaction([
       this.prisma.lesson.findMany({
         where,
-        include: { teacher: true },
+        include: { teacher: true, subject: true, class: true },
         skip: (query.page - 1) * query.limit,
         take: query.limit,
       }),
