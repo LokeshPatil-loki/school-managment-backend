@@ -3,6 +3,7 @@ import { PrismaService } from 'nestjs-prisma';
 import { PaginationProvider } from 'src/common/pagination/providers/pagination.provider';
 import { GetEventsDto } from '../dto/get-events.dto';
 import { Event, Prisma } from '@prisma/client';
+import { CurrentUser } from 'src/common/type/current-user.interface';
 
 @Injectable()
 export class FindEventsProvider {
@@ -10,7 +11,7 @@ export class FindEventsProvider {
     private readonly prisma: PrismaService,
     private readonly paginationProvider: PaginationProvider,
   ) {}
-  async findEvents(query: GetEventsDto) {
+  async findEvents(query: GetEventsDto, currentUser: CurrentUser) {
     const where: Prisma.EventWhereInput = {};
     for (let key in query) {
       switch (key) {
@@ -24,6 +25,19 @@ export class FindEventsProvider {
         }
       }
     }
+    const roleConditions = {
+      teacher: { lessons: { some: { teacherId: currentUser.id } } },
+      student: { students: { some: { id: currentUser.id } } },
+      parent: { students: { some: { parentId: currentUser.id } } },
+    };
+
+    where.OR = [
+      { classId: null },
+      {
+        class: roleConditions[currentUser.publicMetadata.role] || {},
+      },
+    ];
+
     const [data, count] = await this.prisma.$transaction([
       this.prisma.event.findMany({
         where,
