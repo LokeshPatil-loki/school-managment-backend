@@ -5,5 +5,6 @@ import { AppModule } from 'src/app.module';
 @Module({
   providers: [ClerkService],
   imports: [forwardRef(() => AppModule)],
+  exports: [ClerkService],
 })
 export class ClerkModule {}
