@@ -1,4 +1,4 @@
-import { ClerkClient, clerkClient, createClerkClient } from '@clerk/express';
+import { ClerkClient, createClerkClient, User } from '@clerk/express';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { AppConfigType } from 'src/config/app.config';
 
@@ -11,6 +11,7 @@ export class ClerkService implements OnModuleInit {
   async onModuleInit() {
     this.client = createClerkClient({
       secretKey: this.appConfig.clerkClientSecret,
+      publishableKey: this.appConfig.clerkPublishableKey,
     });
   }
 }
