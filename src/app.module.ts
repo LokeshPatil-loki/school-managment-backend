@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from 'nestjs-prisma';
@@ -14,9 +14,18 @@ import { AssignmentsModule } from './assignments/assignments.module';
 import { ResultsModule } from './results/results.module';
 import { EventsModule } from './events/events.module';
 import { AnnouncementsModule } from './announcements/announcements.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClerkModule } from './clerk/clerk.module';
+import environmentValidation from './config/environment.validation';
+import { appConfig, AppConfigType } from './config/app.config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [appConfig],
+      validationSchema: environmentValidation,
+    }),
     PrismaModule.forRoot({
       isGlobal: true,
       prismaServiceOptions: {
@@ -35,8 +44,18 @@ import { AnnouncementsModule } from './announcements/announcements.module';
     ResultsModule,
     EventsModule,
     AnnouncementsModule,
+    forwardRef(() => ClerkModule),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: 'APP_CONFIG',
+      useFactory: (configService: ConfigService) =>
+        configService.get<AppConfigType>('appConfig'),
+      inject: [ConfigService],
+    },
+  ],
+  exports: ['APP_CONFIG'],
 })
 export class AppModule {}
