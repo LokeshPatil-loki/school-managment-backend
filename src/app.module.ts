@@ -18,6 +18,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClerkModule } from './clerk/clerk.module';
 import environmentValidation from './config/environment.validation';
 import { appConfig, AppConfigType } from './config/app.config';
+import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
+import { ClerkAuthGuard } from './auth/guards/clerk-auth/clerk-auth.guard';
 
 @Module({
   imports: [
@@ -45,6 +49,7 @@ import { appConfig, AppConfigType } from './config/app.config';
     EventsModule,
     AnnouncementsModule,
     forwardRef(() => ClerkModule),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
@@ -55,6 +60,11 @@ import { appConfig, AppConfigType } from './config/app.config';
         configService.get<AppConfigType>('appConfig'),
       inject: [ConfigService],
     },
+    {
+      provide: APP_GUARD,
+      useClass: AuthenticationGuard,
+    },
+    ClerkAuthGuard,
   ],
   exports: ['APP_CONFIG'],
 })
