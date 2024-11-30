@@ -3,37 +3,42 @@ import { PrismaService } from 'nestjs-prisma';
 import { PaginationProvider } from 'src/common/pagination/providers/pagination.provider';
 import { GetAssignmentsDto } from '../dto/get-assignments.dto';
 import { Assignment, Prisma } from '@prisma/client';
+import { CurrentUser } from 'src/common/type/current-user.interface';
+
 @Injectable()
 export class FindAssignmentsProvider {
   constructor(
     private readonly prisma: PrismaService,
     private readonly paginationProvider: PaginationProvider,
   ) {}
-  async findAssignments(query: GetAssignmentsDto) {
+  async findAssignments(query: GetAssignmentsDto, currentUser: CurrentUser) {
     const where: Prisma.AssignmentWhereInput = {};
+    where.lesson = {};
     for (let key in query) {
       switch (key) {
         case 'classId': {
-          where.lesson = {
-            classId: { equals: query.classId },
-          };
+          where.lesson.classId = { equals: query.classId };
           break;
         }
         case 'search': {
-          where.lesson = {
-            subject: {
-              name: { contains: query.search, mode: 'insensitive' },
-            },
+          where.lesson.subject = {
+            name: { contains: query.search, mode: 'insensitive' },
           };
           break;
         }
         case 'teacherId': {
-          where.lesson = {
-            teacherId: { equals: query.teacherId },
-          };
+          where.lesson.teacherId = { equals: query.teacherId };
         }
       }
     }
+
+    switch (currentUser.publicMetadata.role) {
+      case 'admin':
+        break;
+      case 'teacher':
+        where.lesson.teacherId = { equals: currentUser.id };
+    }
+
     const [data, count] = await this.prisma.$transaction([
       this.prisma.assignment.findMany({
         where,
