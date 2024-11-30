@@ -37,6 +37,16 @@ export class FindAssignmentsProvider {
         break;
       case 'teacher':
         where.lesson.teacherId = { equals: currentUser.id };
+      case 'student':
+        where.lesson.class = {
+          students: { some: { id: { equals: currentUser.id } } },
+        };
+        break;
+      case 'parent':
+        where.lesson.class = {
+          students: { some: { parentId: { equals: currentUser.id } } },
+        };
+        break;
     }
 
     const [data, count] = await this.prisma.$transaction([
@@ -47,7 +57,7 @@ export class FindAssignmentsProvider {
             select: {
               subject: { select: { name: true } },
               teacher: { select: { name: true, surname: true } },
-              class: { select: { name: true } },
+              class: { select: { name: true, students: true } },
             },
           },
         },
