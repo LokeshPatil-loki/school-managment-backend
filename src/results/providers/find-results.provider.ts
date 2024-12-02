@@ -3,13 +3,14 @@ import { PrismaService } from 'nestjs-prisma';
 import { PaginationProvider } from 'src/common/pagination/providers/pagination.provider';
 import { GetResultsDto } from '../dto/get-results.dto';
 import { Result, Prisma } from '@prisma/client';
+import { CurrentUser } from 'src/common/type/current-user.interface';
 @Injectable()
 export class FindResultsProvider {
   constructor(
     private readonly prisma: PrismaService,
     private readonly paginationProvider: PaginationProvider,
   ) {}
-  async findResults(query: GetResultsDto) {
+  async findResults(query: GetResultsDto, currentUser: CurrentUser) {
     const where: Prisma.ResultWhereInput = {};
     for (let key in query) {
       switch (key) {
@@ -31,6 +32,24 @@ export class FindResultsProvider {
         }
       }
     }
+
+    switch (currentUser.publicMetadata.role) {
+      case 'teacher':
+        where.OR = [
+          { exam: { lesson: { teacherId: currentUser.id } } },
+          { assignment: { lesson: { teacherId: currentUser.id } } },
+        ];
+        break;
+      case 'student':
+        where.studentId = currentUser.id;
+        break;
+      case 'parent':
+        where.student = {
+          parentId: { equals: currentUser.id },
+        };
+        break;
+    }
+
     const [data, count] = await this.prisma.$transaction([
       this.prisma.result.findMany({
         where,
