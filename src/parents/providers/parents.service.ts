@@ -17,4 +17,8 @@ export class ParentService {
   async findParents(query: GetParentsDto) {
     return await this.findParentsProvider.findParents(query);
   }
+
+  async count() {
+    return await this.prisma.parent.count();
+  }
 }

@@ -17,4 +17,8 @@ export class StudentsService {
   async findStudents(query: GetStudentsDto) {
     return await this.findStudentsProvider.findStudents(query);
   }
+
+  async count() {
+    return await this.prisma.student.count();
+  }
 }

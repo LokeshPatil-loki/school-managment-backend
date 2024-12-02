@@ -22,6 +22,7 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
 import { ClerkAuthGuard } from './auth/guards/clerk-auth/clerk-auth.guard';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { ClerkAuthGuard } from './auth/guards/clerk-auth/clerk-auth.guard';
     AnnouncementsModule,
     forwardRef(() => ClerkModule),
     AuthModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [

@@ -21,4 +21,9 @@ export class ParentController {
   findParents(@Query() query: GetParentsDto) {
     return this.parentService.findParents(query);
   }
+
+  @Get('count')
+  count() {
+    return this.parentService.count();
+  }
 }

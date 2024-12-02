@@ -10,4 +10,9 @@ export class TeachersController {
   findAll(@Query() query: GetTeachersDto) {
     return this.teachersService.findTeachers(query);
   }
+
+  @Get('count')
+  count() {
+    return this.teachersService.count();
+  }
 }

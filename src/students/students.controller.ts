@@ -20,4 +20,9 @@ export class StudentsController {
   findAll(@Query() query: GetStudentsDto) {
     return this.studentsService.findStudents(query);
   }
+
+  @Get('count')
+  count() {
+    return this.studentsService.count();
+  }
 }

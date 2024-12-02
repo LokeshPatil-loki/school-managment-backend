@@ -9,10 +9,13 @@ import { FindTeachersProvider } from './find-teachers.provider';
 export class TeachersService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly paginationProvider: PaginationProvider,
     private readonly findTeachersProvider: FindTeachersProvider,
   ) {}
   async findTeachers(query: GetTeachersDto) {
     return await this.findTeachersProvider.findTeachers(query);
+  }
+
+  async count() {
+    return await this.prisma.teacher.count();
   }
 }
