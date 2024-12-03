@@ -21,4 +21,16 @@ export class StudentsService {
   async count() {
     return await this.prisma.student.count();
   }
+
+  async countBySex() {
+    const counts = await this.prisma.student.groupBy({
+      by: ['sex'],
+      _count: true,
+    });
+
+    return {
+      male: counts.filter((item) => item.sex === 'MALE')[0]._count,
+      female: counts.filter((item) => item.sex === 'FEMALE')[0]._count,
+    };
+  }
 }

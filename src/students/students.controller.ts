@@ -1,17 +1,8 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { StudentsService } from './providers/students.service';
-import { CreateStudentDto } from './dto/create-student.dto';
-import { UpdateStudentDto } from './dto/update-student.dto';
 import { GetStudentsDto } from './dto/get-students.dto';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { AuthType } from 'src/auth/enums/auth-type.enum';
 
 @Controller('students')
 export class StudentsController {
@@ -21,8 +12,21 @@ export class StudentsController {
     return this.studentsService.findStudents(query);
   }
 
+  @Auth(AuthType.NONE)
   @Get('count')
   count() {
     return this.studentsService.count();
+  }
+
+  @Auth(AuthType.NONE)
+  @Get('count-by-sex')
+  countBySex() {
+    return this.studentsService.countBySex();
+  }
+
+  @Auth(AuthType.NONE)
+  @Get(':id')
+  find(@Param() id: number) {
+    return { id };
   }
 }
